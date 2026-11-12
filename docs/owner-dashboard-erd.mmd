@@ -1,0 +1,44 @@
+erDiagram
+    ROLES {
+        bigint id PK "unsigned"
+        varchar name UK "50, not null, owner"
+    }
+    USERS {
+        bigint id PK "unsigned"
+        bigint role_id FK "not null"
+        varchar email UK "255, not null"
+        varchar password "255, not null"
+    }
+    CATEGORIES {
+        bigint id PK "unsigned"
+        varchar name UK "120, not null"
+    }
+    PRODUCTS {
+        bigint id PK "unsigned"
+        bigint category_id FK "nullable"
+        varchar name "150, not null"
+        decimal price "12,2 not null"
+        decimal cost_price "12,2 default 0"
+        decimal stock_quantity "12,4 default 0"
+        boolean is_available "default true"
+    }
+    ORDERS {
+        bigint id PK "unsigned"
+        varchar order_number UK "40, not null"
+        decimal total_amount "14,2 not null"
+        decimal cost_total "14,2 default 0"
+        varchar status "12, app values completed/cancelled"
+        timestamp created_at "default current timestamp"
+    }
+    ORDER_ITEMS {
+        bigint id PK "unsigned"
+        bigint order_id FK "not null, cascade delete"
+        bigint product_id FK "not null, restrict delete"
+        decimal quantity "12,4 not null"
+        decimal unit_price "12,2 not null"
+        decimal line_total "14,2 not null"
+    }
+    ROLES ||--o{ USERS : assigns
+    CATEGORIES ||--o{ PRODUCTS : categorizes
+    ORDERS ||--|{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : appears_in
